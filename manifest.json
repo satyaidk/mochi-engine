@@ -1,0 +1,29 @@
+{
+  "name": "Mochi",
+  "version": "1.0.0",
+  "new_install_prompt_erase": true,
+  "new_install_improv_wait_time": 0,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "firmware/MochiWeb.ino.bootloader.bin",
+          "offset": 0
+        },
+        {
+          "path": "firmware/MochiWeb.ino.partitions.bin",
+          "offset": 32768
+        },
+        {
+          "path": "firmware/boot_app0.bin",
+          "offset": 57344
+        },
+        {
+          "path": "firmware/MochiWeb.ino.bin",
+          "offset": 65536
+        }
+      ]
+    }
+  ]
+}

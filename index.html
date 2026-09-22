@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Mochi ESP32-C3 browser firmware flasher."
+  >
+
+  <meta
+    name="theme-color"
+    content="#0b0d12"
+  >
+
+  <title>Mochi — Firmware Flasher</title>
+
+  <!-- ESP Web Tools -->
+  <script
+    type="module"
+    src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"
+  ></script>
+
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --surface: #11141b;
+      --surface-2: #171b23;
+      --border: #272d38;
+
+      --text: #f4f6f8;
+      --muted: #9ba3b0;
+
+      --accent-1: #7c5cff;
+      --accent-2: #5b8cff;
+
+      --success: #4ade80;
+      --warning: #fbbf24;
+
+      --radius: 18px;
+      --max-width: 1080px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      background:
+        linear-gradient(
+          180deg,
+          #0b0d12 0%,
+          #0e1117 100%
+        );
+
+      color: var(--text);
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(
+        calc(100% - 32px),
+        var(--max-width)
+      );
+
+      margin-inline: auto;
+    }
+
+    /* ---------------- Header ---------------- */
+
+    header {
+      border-bottom: 1px solid var(--border);
+
+      background: rgba(11, 13, 18, 0.96);
+
+      position: sticky;
+      top: 0;
+
+      z-index: 20;
+    }
+
+    .nav {
+      min-height: 64px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 10px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--accent-1),
+          var(--accent-2)
+        );
+
+      color: white;
+
+      font-weight: 800;
+    }
+
+    .brand-name {
+      font-size: 16px;
+    }
+
+    .creator {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ---------------- Hero ---------------- */
+
+    .hero {
+      padding: 90px 0 70px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+
+      padding: 6px 11px;
+
+      border: 1px solid var(--border);
+      border-radius: 999px;
+
+      background: var(--surface);
+
+      color: #b9c0cc;
+
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 20px 0 14px;
+
+      font-size:
+        clamp(42px, 7vw, 72px);
+
+      line-height: 1;
+
+      letter-spacing: -0.055em;
+    }
+
+    .hero-description {
+      max-width: 650px;
+
+      margin: 0 auto;
+
+      color: var(--muted);
+
+      font-size: 17px;
+    }
+
+    /* ---------------- Flash card ---------------- */
+
+    .flash-card {
+      width: min(100%, 720px);
+
+      margin: 34px auto 0;
+
+      padding: 28px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: var(--radius);
+
+      text-align: left;
+    }
+
+    .flash-header {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 20px;
+
+      margin-bottom: 22px;
+    }
+
+    .flash-title {
+      margin: 0;
+
+      font-size: 20px;
+    }
+
+    .status {
+      color: var(--success);
+
+      font-size: 13px;
+
+      font-weight: 600;
+    }
+
+    .board {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 20px;
+
+      padding: 16px;
+
+      border-radius: 14px;
+
+      background: var(--surface-2);
+
+      border: 1px solid var(--border);
+    }
+
+    .board-label {
+      color: var(--muted);
+
+      font-size: 12px;
+
+      margin-bottom: 3px;
+    }
+
+    .board-name {
+      font-size: 15px;
+
+      font-weight: 600;
+    }
+
+    /* ---------------- ESP Web Tools ---------------- */
+
+    esp-web-install-button {
+      --esp-tools-button-color: #6f55ff;
+      --esp-tools-button-text-color: #ffffff;
+      --esp-tools-button-border-radius: 12px;
+
+      display: block;
+
+      width: 100%;
+    }
+
+    /*
+      This styles the REAL ESP Web Tools activation button
+      through the component's activate slot.
+
+      We are NOT creating a fake flashing button.
+    */
+
+    esp-web-install-button::part(button) {
+      font-family: inherit;
+    }
+
+    .flash-button {
+      width: 100%;
+
+      min-height: 52px;
+
+      margin-top: 22px;
+
+      border: 0;
+
+      border-radius: 12px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--accent-1),
+          var(--accent-2)
+        );
+
+      color: #fff;
+
+      font: inherit;
+
+      font-weight: 700;
+
+      font-size: 15px;
+
+      letter-spacing: -0.01em;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 8px 22px rgba(79, 70, 229, 0.20);
+
+      transition:
+        transform 150ms ease,
+        filter 150ms ease,
+        box-shadow 150ms ease;
+    }
+
+    .flash-button:hover {
+      filter: brightness(1.07);
+
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 10px 26px rgba(79, 70, 229, 0.25);
+    }
+
+    .flash-button:active {
+      transform: translateY(0);
+
+      box-shadow:
+        0 5px 15px rgba(79, 70, 229, 0.18);
+    }
+
+    .flash-button:focus-visible {
+      outline:
+        3px solid rgba(124, 92, 255, 0.35);
+
+      outline-offset: 3px;
+    }
+
+    .unsupported {
+      margin-top: 14px;
+
+      padding: 12px 14px;
+
+      border-radius: 10px;
+
+      background: #19131a;
+
+      border: 1px solid #3a2635;
+
+      color: #d6a9c4;
+
+      font-size: 13px;
+    }
+
+    /* ---------------- Sections ---------------- */
+
+    .section {
+      padding: 34px 0;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+
+      font-size: 26px;
+
+      letter-spacing: -0.03em;
+    }
+
+    .section-description {
+      margin: 0 0 22px;
+
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 16px;
+    }
+
+    .card {
+      padding: 22px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: var(--radius);
+    }
+
+    .card-number {
+      width: 32px;
+      height: 32px;
+
+      display: grid;
+      place-items: center;
+
+      margin-bottom: 14px;
+
+      border-radius: 9px;
+
+      background: var(--surface-2);
+
+      border: 1px solid var(--border);
+
+      color: #c9ced8;
+
+      font-size: 13px;
+
+      font-weight: 700;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+
+      font-size: 17px;
+    }
+
+    .card p {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 14px;
+    }
+
+    /* ---------------- Warning ---------------- */
+
+    .warning {
+      padding: 20px;
+
+      background:
+        rgba(251, 191, 36, 0.06);
+
+      border:
+        1px solid rgba(251, 191, 36, 0.25);
+
+      border-radius: var(--radius);
+    }
+
+    .warning h3 {
+      margin: 0 0 8px;
+
+      color: var(--warning);
+
+      font-size: 16px;
+    }
+
+    .warning p {
+      margin: 0;
+
+      color: #c8c0a8;
+
+      font-size: 14px;
+    }
+
+    /* ---------------- Tutorial ---------------- */
+
+    .tutorial {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 20px;
+
+      padding: 24px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: var(--radius);
+    }
+
+    .tutorial h3 {
+      margin: 0 0 5px;
+    }
+
+    .tutorial p {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 14px;
+    }
+
+    .tutorial-button {
+      flex-shrink: 0;
+
+      padding: 11px 17px;
+
+      border-radius: 10px;
+
+      background: var(--surface-2);
+
+      border: 1px solid var(--border);
+
+      color: var(--text);
+
+      font-size: 14px;
+
+      font-weight: 600;
+
+      transition:
+        background 150ms ease,
+        border-color 150ms ease;
+    }
+
+    .tutorial-button:hover {
+      background: #1d222c;
+
+      border-color: #39414e;
+    }
+
+    /* ---------------- Code ---------------- */
+
+    code {
+      padding: 2px 5px;
+
+      border-radius: 5px;
+
+      background: #191d25;
+
+      color: #cfd5df;
+
+      font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+
+      font-size: 0.9em;
+    }
+
+    /* ---------------- Footer ---------------- */
+
+    footer {
+      margin-top: 50px;
+
+      padding: 30px 0;
+
+      border-top: 1px solid var(--border);
+
+      color: var(--muted);
+
+      font-size: 13px;
+
+      text-align: center;
+    }
+
+    /* ---------------- Responsive ---------------- */
+
+    @media (max-width: 800px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 65px;
+      }
+
+      .flash-card {
+        padding: 20px;
+      }
+
+      .tutorial {
+        align-items: flex-start;
+
+        flex-direction: column;
+      }
+
+      .tutorial-button {
+        width: 100%;
+
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        width:
+          min(
+            calc(100% - 22px),
+            var(--max-width)
+          );
+      }
+
+      .creator {
+        display: none;
+      }
+
+      .hero-description {
+        font-size: 15px;
+      }
+
+      .board {
+        align-items: flex-start;
+
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="container nav">
+
+    <a
+      class="brand"
+      href="#top"
+      aria-label="Mochi home"
+    >
+      <span class="brand-mark">M</span>
+
+      <span class="brand-name">
+        Mochi
+      </span>
+    </a>
+
+    <span class="creator">
+      Firmware by Satya
+    </span>
+
+  </div>
+</header>
+
+
+<main id="top">
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="container">
+
+      <span class="eyebrow">
+        ESP32-C3 Firmware Flasher
+      </span>
+
+      <h1>
+        Flash Mochi
+      </h1>
+
+      <p class="hero-description">
+        Install Mochi firmware directly from your browser.
+        No desktop flashing software required.
+      </p>
+
+
+      <!-- FLASH CARD -->
+
+      <div class="flash-card">
+
+        <div class="flash-header">
+
+          <div>
+            <h2 class="flash-title">
+              Firmware Installer
+            </h2>
+          </div>
+
+          <span class="status">
+            ● Ready
+          </span>
+
+        </div>
+
+
+        <div class="board">
+
+          <div>
+            <div class="board-label">
+              Supported board
+            </div>
+
+            <div class="board-name">
+              ESP32-C3 Dev Module
+            </div>
+          </div>
+
+          <div>
+            <div class="board-label">
+              Chip
+            </div>
+
+            <div class="board-name">
+              ESP32-C3
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- REAL ESP WEB TOOLS COMPONENT -->
+
+        <esp-web-install-button
+          manifest="manifest.json"
+        >
+
+          <!--
+            This is the ACTUAL ESP Web Tools activation slot.
+            Clicking this invokes ESP Web Tools.
+          -->
+
+          <button
+            class="flash-button"
+            slot="activate"
+            type="button"
+          >
+            Flash Mochi Firmware
+          </button>
+
+
+          <div
+            class="unsupported"
+            slot="unsupported"
+          >
+            Your browser does not support Web Serial.
+            Use a desktop version of Chrome, Edge, or another
+            supported browser.
+          </div>
+
+
+          <div
+            class="unsupported"
+            slot="not-allowed"
+          >
+            This page must be opened through HTTPS.
+            GitHub Pages provides HTTPS automatically.
+          </div>
+
+        </esp-web-install-button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- INSTALLATION -->
+
+  <section class="section">
+
+    <div class="container">
+
+      <h2 class="section-title">
+        How to flash
+      </h2>
+
+      <p class="section-description">
+        Follow these steps before starting the installer.
+      </p>
+
+
+      <div class="grid">
+
+        <article class="card">
+
+          <div class="card-number">
+            1
+          </div>
+
+          <h3>
+            Connect
+          </h3>
+
+          <p>
+            Connect the ESP32-C3 Dev Module to your computer
+            using a USB data cable.
+          </p>
+
+        </article>
+
+
+        <article class="card">
+
+          <div class="card-number">
+            2
+          </div>
+
+          <h3>
+            Open the installer
+          </h3>
+
+          <p>
+            Click the Flash Mochi Firmware button and select
+            the ESP32-C3 serial port.
+          </p>
+
+        </article>
+
+
+        <article class="card">
+
+          <div class="card-number">
+            3
+          </div>
+
+          <h3>
+            Flash
+          </h3>
+
+          <p>
+            Allow ESP Web Tools to erase and write the firmware.
+            Do not disconnect USB during flashing.
+          </p>
+
+        </article>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- WARNING -->
+
+  <section class="section">
+
+    <div class="container">
+
+      <div class="warning">
+
+        <h3>
+          Important
+        </h3>
+
+        <p>
+          Flashing firmware can erase data stored on the device.
+          Use a reliable USB data cable and keep the device
+          connected until ESP Web Tools reports that installation
+          has completed.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- TUTORIAL -->
+
+  <section class="section">
+
+    <div class="container">
+
+      <div class="tutorial">
+
+        <div>
+
+          <h3>
+            Need help?
+          </h3>
+
+          <p>
+            Follow the Mochi firmware flashing tutorial.
+          </p>
+
+        </div>
+
+        <!--
+          Replace this URL with your actual tutorial.
+        -->
+
+        <a
+          class="tutorial-button"
+          href="https://www.youtube.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Watch Tutorial
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- TROUBLESHOOTING -->
+
+  <section class="section">
+
+    <div class="container">
+
+      <h2 class="section-title">
+        Troubleshooting
+      </h2>
+
+      <p class="section-description">
+        Common problems and fixes.
+      </p>
+
+
+      <div class="grid">
+
+        <article class="card">
+
+          <h3>
+            Device not detected
+          </h3>
+
+          <p>
+            Try another USB cable, USB port, or put the ESP32-C3
+            into bootloader mode manually.
+          </p>
+
+        </article>
+
+
+        <article class="card">
+
+          <h3>
+            Manifest download failed
+          </h3>
+
+          <p>
+            Open manifest.json directly in the browser and verify
+            that the firmware paths match the repository structure.
+          </p>
+
+        </article>
+
+
+        <article class="card">
+
+          <h3>
+            Flashing fails
+          </h3>
+
+          <p>
+            Disconnect other serial applications, close Arduino
+            Serial Monitor, and retry with the board in bootloader mode.
+          </p>
+
+        </article>
+
+
+        <article class="card">
+
+          <h3>
+            GitHub Pages 404
+          </h3>
+
+          <p>
+            Verify that index.html is located in the selected
+            Pages publishing directory and that Pages is enabled.
+          </p>
+
+        </article>
+
+
+        <article class="card">
+
+          <h3>
+            Old firmware appears
+          </h3>
+
+          <p>
+            Hard refresh the browser and verify that the published
+            manifest and BIN files are the latest versions.
+          </p>
+
+        </article>
+
+
+        <article class="card">
+
+          <h3>
+            S3 troubleshooting
+          </h3>
+
+          <p>
+            This installer targets ESP32-C3. An ESP32-S3 requires
+            a manifest build specifically targeting ESP32-S3.
+          </p>
+
+        </article>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  <div class="container">
+
+    Mochi · Firmware Installer · Created by Satya
+
+  </div>
+
+</footer>
+
+</body>
+</html>
