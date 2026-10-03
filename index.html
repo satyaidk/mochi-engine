@@ -2,432 +2,266 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Install the Mochi desk companion firmware on an ESP32-C3 Super Mini, straight from your browser.">
+  <meta name="theme-color" content="#FAF6F7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1C1419" media="(prefers-color-scheme: dark)">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <title>Install Mochi</title>
 
-  <meta
-    name="description"
-    content="Mochi ESP32-C3 browser firmware flasher."
-  >
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='10' fill='%233B2430'/%3E%3Crect x='7' y='10' width='7' height='11' rx='3' fill='%23F4C7D3'/%3E%3Crect x='18' y='10' width='7' height='11' rx='3' fill='%23F4C7D3'/%3E%3C/svg%3E">
 
-  <meta
-    name="theme-color"
-    content="#0b0d12"
-  >
-
-  <title>Mochi — Firmware Flasher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap">
+  <link rel="stylesheet" href="styles.css">
 
   <!-- ESP Web Tools -->
-  <script
-    type="module"
-    src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"
-  ></script>
-
-  <!-- Styles -->
-   <link rel="stylesheet" href="styles.css">
+  <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+  <script src="mochi.js" defer></script>
 </head>
 
 <body>
 
-<header>
-  <div class="container nav">
-
-    <a
-      class="brand"
-      href="#top"
-      aria-label="Mochi home"
-    >
-      <span class="brand-mark">M</span>
-
-      <span class="brand-name">
-        Mochi
-      </span>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="#top" aria-label="Mochi home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="10"/>
+        <rect class="brand__eye" x="7" y="10" width="7" height="11" rx="3"/>
+        <rect class="brand__eye" x="18" y="10" width="7" height="11" rx="3"/>
+      </svg>
+      <span>Mochi</span>
     </a>
-
-    <span class="creator">
-      Firmware by Satya
-    </span>
-
+    <p class="byline">Firmware by Satya</p>
   </div>
 </header>
 
 
 <main id="top">
 
-  <!-- HERO -->
-
+  <!-- Hero: Mochi's face + the installer -->
   <section class="hero">
+    <div class="container hero__grid">
 
-    <div class="container">
-
-      <span class="eyebrow">
-        ESP32-C3 Firmware Flasher
-      </span>
-
-      <h1>
-        Flash Mochi
-      </h1>
-
-      <p class="hero-description">
-        Install Mochi firmware directly from your browser.
-        No desktop flashing software required.
-      </p>
-
-
-      <!-- FLASH CARD -->
-
-      <div class="flash-card">
-
-        <div class="flash-header">
-
-          <div>
-            <h2 class="flash-title">
-              Firmware Installer
-            </h2>
-          </div>
-
-          <span class="status">
-            ● Ready
+      <figure class="pet">
+        <button class="pet__body" id="pet" type="button" aria-label="Poke Mochi to see another face">
+          <span class="pet__cheek pet__cheek--left" aria-hidden="true"></span>
+          <span class="pet__screen">
+            <canvas id="oled" width="128" height="64" aria-hidden="true"></canvas>
           </span>
+          <span class="pet__cheek pet__cheek--right" aria-hidden="true"></span>
+        </button>
+        <figcaption class="pet__caption" id="pet-caption" aria-live="polite">Tap the screen to poke Mochi</figcaption>
+      </figure>
 
-        </div>
-
-
-        <div class="board">
-
-          <div>
-            <div class="board-label">
-              Supported board
-            </div>
-
-            <div class="board-name">
-              ESP32-C3 Dev Module
-            </div>
-          </div>
-
-          <div>
-            <div class="board-label">
-              Chip
-            </div>
-
-            <div class="board-name">
-              ESP32-C3
-            </div>
-          </div>
-
-        </div>
-
-
-        <!-- REAL ESP WEB TOOLS COMPONENT -->
-
-        <esp-web-install-button
-          manifest="manifest.json"
-        >
-
-          <!--
-            This is the ACTUAL ESP Web Tools activation slot.
-            Clicking this invokes ESP Web Tools.
-          -->
-
-          <button
-            class="flash-button"
-            slot="activate"
-            type="button"
-          >
-            Flash Mochi Firmware
-          </button>
-
-
-          <div
-            class="unsupported"
-            slot="unsupported"
-          >
-            Your browser does not support Web Serial.
-            Use a desktop version of Chrome, Edge, or another
-            supported browser.
-          </div>
-
-
-          <div
-            class="unsupported"
-            slot="not-allowed"
-          >
-            This page must be opened through HTTPS.
-            GitHub Pages provides HTTPS automatically.
-          </div>
-
-        </esp-web-install-button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- INSTALLATION -->
-
-  <section class="section">
-
-    <div class="container">
-
-      <h2 class="section-title">
-        How to flash
-      </h2>
-
-      <p class="section-description">
-        Follow these steps before starting the installer.
-      </p>
-
-
-      <div class="grid">
-
-        <article class="card">
-
-          <div class="card-number">
-            1
-          </div>
-
-          <h3>
-            Connect
-          </h3>
-
-          <p>
-            Connect the ESP32-C3 Dev Module to your computer
-            using a USB data cable.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <div class="card-number">
-            2
-          </div>
-
-          <h3>
-            Open the installer
-          </h3>
-
-          <p>
-            Click the Flash Mochi Firmware button and select
-            the ESP32-C3 serial port.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <div class="card-number">
-            3
-          </div>
-
-          <h3>
-            Flash
-          </h3>
-
-          <p>
-            Allow ESP Web Tools to erase and write the firmware.
-            Do not disconnect USB during flashing.
-          </p>
-
-        </article>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- WARNING -->
-
-  <section class="section">
-
-    <div class="container">
-
-      <div class="warning">
-
-        <h3>
-          Important
-        </h3>
-
-        <p>
-          Flashing firmware can erase data stored on the device.
-          Use a reliable USB data cable and keep the device
-          connected until ESP Web Tools reports that installation
-          has completed.
+      <div class="hero__copy">
+        <h1>Install Mochi on your <span class="nowrap">ESP32-C3</span> Super&nbsp;Mini</h1>
+        <p class="lead">
+          Plug the board in over USB and install the firmware from this tab.
+          No Arduino IDE needed.
         </p>
 
+        <div class="installer">
+          <dl class="specs">
+            <div class="specs__item">
+              <dt>Board</dt>
+              <dd>ESP32-C3 Super Mini</dd>
+            </div>
+            <div class="specs__item">
+              <dt>Firmware</dt>
+              <dd>Mochi <span data-version>1.0.0</span></dd>
+            </div>
+            <div class="specs__item">
+              <dt>Cable</dt>
+              <dd>USB-C with data</dd>
+            </div>
+          </dl>
+
+          <!-- The real ESP Web Tools component. The slotted button opens its installer. -->
+          <esp-web-install-button manifest="manifest.json">
+            <button class="install-button" slot="activate" type="button">
+              Install Mochi
+            </button>
+
+            <p class="notice notice--error" slot="unsupported">
+              This browser can't talk to USB devices. Open this page in
+              desktop Chrome or Edge to install Mochi.
+            </p>
+
+            <p class="notice notice--error" slot="not-allowed">
+              The installer only runs on a secure page. Open this page
+              over HTTPS (GitHub Pages does this for you).
+            </p>
+          </esp-web-install-button>
+
+          <p class="installer__hint">Works in desktop Chrome and Edge.</p>
+        </div>
       </div>
 
     </div>
-
   </section>
 
 
-  <!-- TUTORIAL -->
-
-  <section class="section">
-
+  <!-- How to install -->
+  <section class="section" aria-labelledby="steps-title">
     <div class="container">
 
-      <div class="tutorial">
+      <div class="section__head">
+        <h2 id="steps-title">How to install</h2>
 
-        <div>
+        <!-- Replace this URL with your actual tutorial. -->
+        <a class="pill-link" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6.5 4.8v10.4a.8.8 0 0 0 1.2.7l8.3-5.2a.8.8 0 0 0 0-1.4L7.7 4.1a.8.8 0 0 0-1.2.7Z" fill="currentColor"/></svg>
+          Watch the video tutorial
+        </a>
+      </div>
 
-          <h3>
-            Need help?
-          </h3>
-
+      <ol class="steps">
+        <li class="step">
+          <h3>Plug in the board</h3>
           <p>
-            Follow the Mochi firmware flashing tutorial.
+            Connect the Super Mini to your computer with a USB-C cable
+            that carries data. Charge-only cables won't show up.
           </p>
+        </li>
 
+        <li class="step">
+          <h3>Click Install Mochi</h3>
+          <p>
+            Your browser lists the serial ports it can see. Pick the one
+            named <em>USB JTAG/serial debug unit</em> and connect.
+          </p>
+        </li>
+
+        <li class="step">
+          <h3>Wait for it to finish</h3>
+          <p>
+            The installer erases the board and writes Mochi. Keep the
+            cable plugged in until it says installation is complete.
+          </p>
+        </li>
+
+        <li class="step">
+          <h3>Say hello</h3>
+          <p>
+            Mochi restarts and its face appears. Once it's on your Wi-Fi,
+            open <a href="http://mochi.local/">mochi.local</a> to change
+            faces, sounds and the clock.
+          </p>
+        </li>
+      </ol>
+
+      <aside class="note">
+        <svg class="note__icon" viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="10" cy="10" r="9" fill="currentColor" opacity=".18"/>
+          <rect x="9" y="5" width="2" height="7" rx="1" fill="currentColor"/>
+          <circle cx="10" cy="14.6" r="1.2" fill="currentColor"/>
+        </svg>
+        <p>
+          Installing can erase what's saved on the board, like its Wi-Fi
+          details. If the cable comes loose midway, the board may not start;
+          run the installer again to fix it.
+        </p>
+      </aside>
+
+    </div>
+  </section>
+
+
+  <!-- Troubleshooting -->
+  <section class="section" aria-labelledby="help-title">
+    <div class="container help">
+
+      <div class="help__intro">
+        <h2 id="help-title">If something goes wrong</h2>
+        <p>
+          Most problems come down to the cable or another app holding
+          the port. Start there.
+        </p>
+      </div>
+
+      <div class="help__list">
+        <div class="faq">
+          <details>
+            <summary>The board isn't in the port list</summary>
+            <p>
+              Try a different cable or USB port. If it still doesn't appear,
+              put the board into download mode: hold <kbd>BOOT</kbd>, press
+              and release <kbd>RST</kbd>, then let go of <kbd>BOOT</kbd>.
+              Click Install Mochi again.
+            </p>
+          </details>
+
+          <details>
+            <summary>Installing stops partway</summary>
+            <p>
+              Close the Arduino Serial Monitor and any other app using the
+              port, put the board into download mode, and try again.
+            </p>
+          </details>
+
+          <details>
+            <summary>No face on the screen after installing</summary>
+            <p>
+              Mochi looks for the screen at I²C address 0x3C or 0x3D. Check
+              the SDA and SCL wires. If you used different pins, set them in
+              the controller at mochi.local.
+            </p>
+          </details>
+
+          <details>
+            <summary>The installer says the chip isn't supported</summary>
+            <p>
+              This build is for ESP32-C3 boards only. An ESP32-S3 needs its
+              own S3 build of the firmware.
+            </p>
+          </details>
         </div>
 
-        <!--
-          Replace this URL with your actual tutorial.
-        -->
+        <h3 class="faq-group">If you host this installer</h3>
 
-        <a
-          class="tutorial-button"
-          href="https://www.youtube.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Watch Tutorial
-        </a>
+        <div class="faq">
+          <details>
+            <summary>GitHub Pages shows a 404</summary>
+            <p>
+              Check that index.html sits in the folder Pages publishes from,
+              and that Pages is turned on for the repository.
+            </p>
+          </details>
 
+          <details>
+            <summary>The firmware files won't download</summary>
+            <p>
+              Open manifest.json in the browser and check that every firmware
+              path in it matches a file in the repository.
+            </p>
+          </details>
+
+          <details>
+            <summary>An old version still installs</summary>
+            <p>
+              Hard refresh the page, then confirm the published manifest.json
+              and .bin files are the latest ones.
+            </p>
+          </details>
+        </div>
       </div>
 
     </div>
-
-  </section>
-
-
-  <!-- TROUBLESHOOTING -->
-
-  <section class="section">
-
-    <div class="container">
-
-      <h2 class="section-title">
-        Troubleshooting
-      </h2>
-
-      <p class="section-description">
-        Common problems and fixes.
-      </p>
-
-
-      <div class="grid">
-
-        <article class="card">
-
-          <h3>
-            Device not detected
-          </h3>
-
-          <p>
-            Try another USB cable, USB port, or put the ESP32-C3
-            into bootloader mode manually.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <h3>
-            Manifest download failed
-          </h3>
-
-          <p>
-            Open manifest.json directly in the browser and verify
-            that the firmware paths match the repository structure.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <h3>
-            Flashing fails
-          </h3>
-
-          <p>
-            Disconnect other serial applications, close Arduino
-            Serial Monitor, and retry with the board in bootloader mode.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <h3>
-            GitHub Pages 404
-          </h3>
-
-          <p>
-            Verify that index.html is located in the selected
-            Pages publishing directory and that Pages is enabled.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <h3>
-            Old firmware appears
-          </h3>
-
-          <p>
-            Hard refresh the browser and verify that the published
-            manifest and BIN files are the latest versions.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <h3>
-            S3 troubleshooting
-          </h3>
-
-          <p>
-            This installer targets ESP32-C3. An ESP32-S3 requires
-            a manifest build specifically targeting ESP32-S3.
-          </p>
-
-        </article>
-
-      </div>
-
-    </div>
-
   </section>
 
 </main>
 
 
-<footer>
-
-  <div class="container">
-
-    Mochi · Firmware Installer · Created by Satya
-
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p>Mochi firmware by Satya</p>
+    <p>
+      Installer powered by
+      <a href="https://esphome.github.io/esp-web-tools/" target="_blank" rel="noopener noreferrer">ESP Web Tools</a>
+    </p>
   </div>
-
 </footer>
 
 </body>

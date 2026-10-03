@@ -1,609 +1,685 @@
-    :root {
-      --bg: #0b0d12;
-      --surface: #11141b;
-      --surface-2: #171b23;
-      --border: #272d38;
-
-      --text: #f4f6f8;
-      --muted: #9ba3b0;
-
-      --accent-1: #7c5cff;
-      --accent-2: #5b8cff;
-
-      --success: #4ade80;
-      --warning: #fbbf24;
-
-      --radius: 18px;
-      --max-width: 1080px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-
-      background:
-        linear-gradient(
-          180deg,
-          #0b0d12 0%,
-          #0e1117 100%
-        );
-
-      color: var(--text);
-
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-      line-height: 1.6;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(
-        calc(100% - 32px),
-        var(--max-width)
-      );
-
-      margin-inline: auto;
-    }
-
-    /* ---------------- Header ---------------- */
-
-    header {
-      border-bottom: 1px solid var(--border);
-
-      background: rgba(11, 13, 18, 0.96);
-
-      position: sticky;
-      top: 0;
-
-      z-index: 20;
-    }
-
-    .nav {
-      min-height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .brand {
-      display: flex;
-      margin-left: -400px;
-      gap: 10px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .brand-mark {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-
-      border-radius: 10px;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--accent-1),
-          var(--accent-2)
-        );
-
-      color: white;
-
-      font-weight: 800;
-    }
-
-    .brand-name {
-      font-size: 16px;
-    }
-
-    .creator {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* ---------------- Hero ---------------- */
-
-    .hero {
-      padding: 90px 0 70px;
-      text-align: center;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-
-      padding: 6px 11px;
-
-      border: 1px solid var(--border);
-      border-radius: 999px;
-
-      background: var(--surface);
-
-      color: #b9c0cc;
-
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    h1 {
-      margin: 20px 0 14px;
-
-      font-size:
-        clamp(42px, 7vw, 72px);
-
-      line-height: 1;
-
-      letter-spacing: -0.055em;
-    }
-
-    .hero-description {
-      max-width: 650px;
-
-      margin: 0 auto;
-
-      color: var(--muted);
-
-      font-size: 17px;
-    }
-
-    /* ---------------- Flash card ---------------- */
-
-    .flash-card {
-      width: min(100%, 720px);
-
-      margin: 34px auto 0;
-
-      padding: 28px;
-
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-
-      border-radius: var(--radius);
-
-      text-align: left;
-    }
-
-    .flash-header {
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      gap: 20px;
-
-      margin-bottom: 22px;
-    }
-
-    .flash-title {
-      margin: 0;
-
-      font-size: 20px;
-    }
-
-    .status {
-      color: var(--success);
-
-      font-size: 13px;
-
-      font-weight: 600;
-    }
-
-    .board {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 20px;
-
-      padding: 16px;
-
-      border-radius: 14px;
-
-      background: var(--surface-2);
-
-      border: 1px solid var(--border);
-    }
-
-    .board-label {
-      color: var(--muted);
-
-      font-size: 12px;
-
-      margin-bottom: 3px;
-    }
-
-    .board-name {
-      font-size: 15px;
-
-      font-weight: 600;
-    }
-
-    /* ---------------- ESP Web Tools ---------------- */
-
-    esp-web-install-button {
-      --esp-tools-button-color: #6f55ff;
-      --esp-tools-button-text-color: #ffffff;
-      --esp-tools-button-border-radius: 12px;
-
-      display: block;
-
-      width: 100%;
-    }
-
-    /*
-      This styles the REAL ESP Web Tools activation button
-      through the component's activate slot.
-
-      We are NOT creating a fake flashing button.
-    */
-
-    esp-web-install-button::part(button) {
-      font-family: inherit;
-    }
-
-    .flash-button {
-      width: 100%;
-
-      min-height: 52px;
-
-      margin-top: 22px;
-
-      border: 0;
-
-      border-radius: 12px;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--accent-1),
-          var(--accent-2)
-        );
-
-      color: #fff;
-
-      font: inherit;
-
-      font-weight: 700;
-
-      font-size: 15px;
-
-      letter-spacing: -0.01em;
-
-      cursor: pointer;
-
-      box-shadow:
-        0 8px 22px rgba(79, 70, 229, 0.20);
-
-      transition:
-        transform 150ms ease,
-        filter 150ms ease,
-        box-shadow 150ms ease;
-    }
-
-    .flash-button:hover {
-      filter: brightness(1.07);
-
-      transform: translateY(-1px);
-
-      box-shadow:
-        0 10px 26px rgba(79, 70, 229, 0.25);
-    }
-
-    .flash-button:active {
-      transform: translateY(0);
-
-      box-shadow:
-        0 5px 15px rgba(79, 70, 229, 0.18);
-    }
-
-    .flash-button:focus-visible {
-      outline:
-        3px solid rgba(124, 92, 255, 0.35);
-
-      outline-offset: 3px;
-    }
-
-    .unsupported {
-      margin-top: 14px;
-
-      padding: 12px 14px;
-
-      border-radius: 10px;
-
-      background: #19131a;
-
-      border: 1px solid #3a2635;
-
-      color: #d6a9c4;
-
-      font-size: 13px;
-    }
-
-    /* ---------------- Sections ---------------- */
-
-    .section {
-      padding: 34px 0;
-    }
-
-    .section-title {
-      margin: 0 0 8px;
-
-      font-size: 26px;
-
-      letter-spacing: -0.03em;
-    }
-
-    .section-description {
-      margin: 0 0 22px;
-
-      color: var(--muted);
-    }
-
-    .grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
-      gap: 16px;
-    }
-
-    .card {
-      padding: 22px;
-
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-
-      border-radius: var(--radius);
-    }
-
-    .card-number {
-      width: 32px;
-      height: 32px;
-
-      display: grid;
-      place-items: center;
-
-      margin-bottom: 14px;
-
-      border-radius: 9px;
-
-      background: var(--surface-2);
-
-      border: 1px solid var(--border);
-
-      color: #c9ced8;
-
-      font-size: 13px;
-
-      font-weight: 700;
-    }
-
-    .card h3 {
-      margin: 0 0 8px;
-
-      font-size: 17px;
-    }
-
-    .card p {
-      margin: 0;
-
-      color: var(--muted);
-
-      font-size: 14px;
-    }
-
-    /* ---------------- Warning ---------------- */
-
-    .warning {
-      padding: 20px;
-
-      background:
-        rgba(251, 191, 36, 0.06);
-
-      border:
-        1px solid rgba(251, 191, 36, 0.25);
-
-      border-radius: var(--radius);
-    }
-
-    .warning h3 {
-      margin: 0 0 8px;
-
-      color: var(--warning);
-
-      font-size: 16px;
-    }
-
-    .warning p {
-      margin: 0;
-
-      color: #c8c0a8;
-
-      font-size: 14px;
-    }
-
-    /* ---------------- Tutorial ---------------- */
-
-    .tutorial {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 20px;
-
-      padding: 24px;
-
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-
-      border-radius: var(--radius);
-    }
-
-    .tutorial h3 {
-      margin: 0 0 5px;
-    }
-
-    .tutorial p {
-      margin: 0;
-
-      color: var(--muted);
-
-      font-size: 14px;
-    }
-
-    .tutorial-button {
-      flex-shrink: 0;
-
-      padding: 11px 17px;
-
-      border-radius: 10px;
-
-      background: var(--surface-2);
-
-      border: 1px solid var(--border);
-
-      color: var(--text);
-
-      font-size: 14px;
-
-      font-weight: 600;
-
-      transition:
-        background 150ms ease,
-        border-color 150ms ease;
-    }
-
-    .tutorial-button:hover {
-      background: #1d222c;
-
-      border-color: #39414e;
-    }
-
-    /* ---------------- Code ---------------- */
-
-    code {
-      padding: 2px 5px;
-
-      border-radius: 5px;
-
-      background: #191d25;
-
-      color: #cfd5df;
-
-      font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        Consolas,
-        monospace;
-
-      font-size: 0.9em;
-    }
-
-    /* ---------------- Footer ---------------- */
-
-    footer {
-      margin-top: 50px;
-
-      padding: 30px 0;
-
-      border-top: 1px solid var(--border);
-
-      color: var(--muted);
-
-      font-size: 13px;
-
-      text-align: center;
-    }
-
-    /* ---------------- Responsive ---------------- */
-
-    @media (max-width: 800px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding-top: 65px;
-      }
-
-      .flash-card {
-        padding: 20px;
-      }
-
-      .tutorial {
-        align-items: flex-start;
-
-        flex-direction: column;
-      }
-
-      .tutorial-button {
-        width: 100%;
-
-        text-align: center;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .container {
-        width:
-          min(
-            calc(100% - 22px),
-            var(--max-width)
-          );
-      }
-
-      .creator {
-        display: none;
-      }
-
-      .hero-description {
-        font-size: 15px;
-      }
-
-      .board {
-        align-items: flex-start;
-
-        flex-direction: column;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
-      * {
-        transition: none !important;
-      }
-    }
+/* ------------------------------------------------------------
+   Mochi installer
+   Palette is a daifuku: rice-white, sakura pink, anko (red bean)
+   for ink. The OLED is the only true black on the page.
+   ------------------------------------------------------------ */
+
+:root {
+  color-scheme: light dark;
+
+  --rice: #FAF6F7;
+  --surface: #FFFFFF;
+  --line: #EADDE2;
+  --ink: #3B2430;
+  --ink-soft: #76616B;
+
+  --sakura: #F4C7D3;
+  --sakura-strong: #C9577A;
+  --on-sakura: #3B2430;
+
+  --kinako-bg: #FBF1D6;
+  --kinako-line: #EBD394;
+  --kinako-ink: #6A4F14;
+
+  --error-bg: #FCE8EA;
+  --error-line: #EFB9C0;
+  --error-ink: #8A2335;
+
+  --button-bg: #3B2430;
+  --button-hover: #563746;
+  --button-ink: #FFF7FA;
+  --mark-eye: #F4C7D3;
+
+  /* The mochi itself stays rice-white in both themes. */
+  --body-hi: #FFFFFF;
+  --body-mid: #FBF0F3;
+  --body-low: #F0D3DD;
+  --cheek: #F6B3C5;
+  --oled: #040506;
+
+  --shadow: 59 36 48;
+
+  /* Themes the ESP Web Tools dialog. */
+  --mdc-theme-primary: #9A3F62;
+
+  --font: "M PLUS Rounded 1c", ui-rounded, "Hiragino Maru Gothic ProN",
+    "Segoe UI", system-ui, sans-serif;
+
+  --max-width: 1080px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rice: #1C1419;
+    --surface: #251B21;
+    --line: #3A2B33;
+    --ink: #F7EDF1;
+    --ink-soft: #BBA7B1;
+
+    --sakura-strong: #F09AB3;
+
+    --kinako-bg: #2C2414;
+    --kinako-line: #5A4920;
+    --kinako-ink: #EBD49A;
+
+    --error-bg: #3A1D25;
+    --error-line: #6B3241;
+    --error-ink: #F6C2CC;
+
+    --button-bg: #F4C7D3;
+    --button-hover: #F9DAE3;
+    --button-ink: #3B2430;
+    --mark-eye: #3B2430;
+
+    --shadow: 0 0 0;
+  }
+}
+
+/* ---------------- Base ---------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--rice);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--sakura-strong);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+:focus-visible {
+  outline: 3px solid var(--sakura-strong);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+kbd {
+  display: inline-block;
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.85em;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.container {
+  width: min(100% - 32px, var(--max-width));
+  margin-inline: auto;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* ---------------- Header ---------------- */
+
+.site-header__inner {
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.brand__mark {
+  width: 30px;
+  height: 30px;
+  fill: var(--button-bg);
+}
+
+.brand__eye {
+  fill: var(--mark-eye);
+}
+
+.byline {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+/* ---------------- Hero ---------------- */
+
+.hero {
+  padding: 40px 0 104px;
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 72px;
+}
+
+.hero h1 {
+  margin-bottom: 20px;
+  font-size: clamp(36px, 1.4rem + 3vw, 58px);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+
+.lead {
+  max-width: 32em;
+  margin-bottom: 32px;
+  color: var(--ink-soft);
+  font-size: 18px;
+}
+
+/* ---------------- Mochi (the pet) ---------------- */
+
+.pet {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: 20px;
+}
+
+.pet__body {
+  position: relative;
+  width: min(100%, 440px);
+  aspect-ratio: 1.2;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50% 50% 44% 44% / 60% 60% 40% 40%;
+  background:
+    radial-gradient(120% 95% at 32% 16%,
+      var(--body-hi) 0%,
+      var(--body-mid) 46%,
+      var(--body-low) 100%);
+  box-shadow:
+    inset 0 -22px 34px rgb(214 140 166 / 0.28),
+    inset 0 12px 22px rgb(255 255 255 / 0.9),
+    0 0 0 1px rgb(222 186 199 / 0.45),
+    0 -4px 18px rgb(214 150 172 / 0.12),
+    0 34px 44px -26px rgb(var(--shadow) / 0.45);
+  cursor: pointer;
+  transform-origin: 50% 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pet__body:focus-visible {
+  outline-offset: 8px;
+  border-radius: 50% 50% 44% 44% / 60% 60% 40% 40%;
+}
+
+.pet__body.is-squished {
+  animation: squish 440ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+@keyframes squish {
+  0%   { transform: scale(1, 1); }
+  30%  { transform: scale(1.07, 0.9); }
+  62%  { transform: scale(0.97, 1.04); }
+  100% { transform: scale(1, 1); }
+}
+
+.pet__screen {
+  width: 58%;
+  aspect-ratio: 2;
+  margin-top: -6%;
+  padding: 3.5%;
+  border-radius: 12px;
+  background: var(--oled);
+  box-shadow:
+    inset 0 0 0 2px #1D1A1C,
+    0 1px 0 2px rgb(255 255 255 / 0.7);
+}
+
+.pet__screen canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 2px rgb(150 215 255 / 0.55));
+}
+
+.pet__cheek {
+  position: absolute;
+  top: 56%;
+  width: 12%;
+  aspect-ratio: 1.7;
+  border-radius: 50%;
+  background: var(--cheek);
+  opacity: 0.75;
+  filter: blur(3px);
+}
+
+.pet__cheek--left {
+  left: 7%;
+}
+
+.pet__cheek--right {
+  right: 7%;
+}
+
+.pet__caption {
+  min-height: 1.6em;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+/* ---------------- Installer ---------------- */
+
+.installer {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: 0 20px 44px -30px rgb(var(--shadow) / 0.4);
+}
+
+.specs {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  margin: 0 0 22px;
+}
+
+.specs dt {
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.specs dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+esp-web-install-button {
+  display: block;
+}
+
+/* Until ESP Web Tools loads, only the install button should show. */
+esp-web-install-button:not(:defined) > [slot="unsupported"],
+esp-web-install-button:not(:defined) > [slot="not-allowed"] {
+  display: none;
+}
+
+.install-button {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--button-bg);
+  color: var(--button-ink);
+  font: inherit;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+
+.install-button:hover {
+  background: var(--button-hover);
+}
+
+.install-button:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.install-button:focus-visible {
+  border-radius: 16px;
+}
+
+.installer__hint {
+  margin-top: 12px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  text-align: center;
+}
+
+.notice {
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 15px;
+}
+
+.notice--error {
+  border: 1px solid var(--error-line);
+  background: var(--error-bg);
+  color: var(--error-ink);
+}
+
+/* ---------------- Sections ---------------- */
+
+.section {
+  padding: 80px 0;
+  border-top: 1px solid var(--line);
+}
+
+.section h2 {
+  font-size: clamp(28px, 1.2rem + 1.4vw, 36px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: 40px;
+}
+
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-color 150ms ease;
+}
+
+.pill-link:hover {
+  border-color: var(--ink-soft);
+}
+
+.pill-link:focus-visible {
+  border-radius: 999px;
+}
+
+.pill-link svg {
+  width: 18px;
+  height: 18px;
+  color: var(--sakura-strong);
+}
+
+/* ---------------- Steps ---------------- */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 40px 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.step {
+  counter-increment: step;
+}
+
+/* Each number sits in a little mochi. */
+.step::before {
+  content: counter(step);
+  width: 46px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 50% 50% 44% 44% / 60% 60% 40% 40%;
+  background: var(--sakura);
+  color: var(--on-sakura);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.step h3 {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.step p {
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+
+.step em {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 48px;
+  padding: 16px 20px;
+  border: 1px solid var(--kinako-line);
+  border-radius: 16px;
+  background: var(--kinako-bg);
+  color: var(--kinako-ink);
+  font-size: 15px;
+}
+
+.note__icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  margin-top: 2px;
+}
+
+/* ---------------- Troubleshooting ---------------- */
+
+.help {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 64px;
+}
+
+.help__intro p {
+  margin-top: 14px;
+  color: var(--ink-soft);
+  max-width: 28em;
+}
+
+.faq details {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq details:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 2px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  flex: none;
+  background:
+    linear-gradient(currentColor, currentColor) center / 12px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 2px 12px no-repeat;
+  color: var(--ink-soft);
+  transition: transform 200ms ease;
+}
+
+.faq details[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+.faq details p {
+  max-width: 62ch;
+  padding: 0 2px 20px;
+  color: var(--ink-soft);
+}
+
+.faq-group {
+  margin: 48px 0 12px;
+  color: var(--ink-soft);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* ---------------- Footer ---------------- */
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding: 28px 0 40px;
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media (max-width: 900px) {
+  .hero {
+    padding: 16px 0 80px;
+  }
+
+  .hero__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  .pet__body {
+    width: min(100%, 360px);
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .help {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (max-width: 560px) {
+  .section {
+    padding: 64px 0;
+  }
+
+  .lead {
+    font-size: 17px;
+  }
+
+  .installer {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .specs {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .specs__item {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .specs__item:first-child {
+    padding-top: 0;
+  }
+
+  .specs dd {
+    text-align: right;
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
