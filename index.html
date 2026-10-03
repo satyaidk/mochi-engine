@@ -4,16 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Install the Mochi desk companion firmware on an ESP32-C3 Super Mini, straight from your browser.">
-  <meta name="theme-color" content="#FAF6F7" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1C1419" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#5CC6F2">
 
   <title>Install Mochi</title>
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='10' fill='%233B2430'/%3E%3Crect x='7' y='10' width='7' height='11' rx='3' fill='%23F4C7D3'/%3E%3Crect x='18' y='10' width='7' height='11' rx='3' fill='%23F4C7D3'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='10' fill='%23E8452C'/%3E%3Crect x='7' y='10' width='7' height='11' rx='3' fill='%23FFF6E5'/%3E%3Crect x='18' y='10' width='7' height='11' rx='3' fill='%23FFF6E5'/%3E%3C/svg%3E">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap">
   <link rel="stylesheet" href="styles.css">
 
   <!-- ESP Web Tools -->
@@ -23,244 +22,505 @@
 
 <body>
 
-<header class="site-header">
-  <div class="container site-header__inner">
-    <a class="brand" href="#top" aria-label="Mochi home">
-      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
-        <rect width="32" height="32" rx="10"/>
-        <rect class="brand__eye" x="7" y="10" width="7" height="11" rx="3"/>
-        <rect class="brand__eye" x="18" y="10" width="7" height="11" rx="3"/>
-      </svg>
-      <span>Mochi</span>
-    </a>
-    <p class="byline">Firmware by Satya</p>
-  </div>
-</header>
+<!-- Shared SVG pieces -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="blossom" viewBox="-22 -22 44 44">
+      <g fill="#FF9EBB" stroke="#D9487A" stroke-width="1.6" stroke-linejoin="round">
+        <path id="petal" d="M0 0 C-10 -4 -11 -15 -4.5 -18.5 L0 -15 L4.5 -18.5 C11 -15 10 -4 0 0 Z"/>
+        <use href="#petal" transform="rotate(72)"/>
+        <use href="#petal" transform="rotate(144)"/>
+        <use href="#petal" transform="rotate(216)"/>
+        <use href="#petal" transform="rotate(288)"/>
+      </g>
+      <circle r="5" fill="#FFE3EC"/>
+      <g fill="#E8452C">
+        <circle cx="0" cy="-6.5" r="1.4"/>
+        <circle cx="6.2" cy="-2" r="1.4"/>
+        <circle cx="3.8" cy="5.3" r="1.4"/>
+        <circle cx="-3.8" cy="5.3" r="1.4"/>
+        <circle cx="-6.2" cy="-2" r="1.4"/>
+      </g>
+    </symbol>
+
+    <g id="cloud-shape">
+      <rect x="0" y="22" width="210" height="26" rx="13"/>
+      <rect x="46" y="0" width="120" height="26" rx="13"/>
+      <rect x="86" y="44" width="170" height="26" rx="13"/>
+    </g>
+  </defs>
+</svg>
 
 
-<main id="top">
+<!-- ============ HERO: the shrine ============ -->
+<div class="sky">
 
-  <!-- Hero: Mochi's face + the installer -->
-  <section class="hero">
-    <div class="container hero__grid">
+  <svg class="sky__clouds" viewBox="0 0 1440 760" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g transform="translate(-60 330)">
+      <use href="#cloud-shape" fill="#1B2163" stroke="#1B2163" stroke-width="7" stroke-linejoin="round"/>
+      <use href="#cloud-shape" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(1270 470) scale(.8)">
+      <use href="#cloud-shape" fill="#1B2163" stroke="#1B2163" stroke-width="7" stroke-linejoin="round"/>
+      <use href="#cloud-shape" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(560 120) scale(.5)">
+      <use href="#cloud-shape" fill="#1B2163" stroke="#1B2163" stroke-width="8" stroke-linejoin="round"/>
+      <use href="#cloud-shape" fill="#FFFFFF"/>
+    </g>
+  </svg>
 
-      <figure class="pet">
-        <button class="pet__body" id="pet" type="button" aria-label="Poke Mochi to see another face">
-          <span class="pet__cheek pet__cheek--left" aria-hidden="true"></span>
-          <span class="pet__screen">
-            <canvas id="oled" width="128" height="64" aria-hidden="true"></canvas>
-          </span>
-          <span class="pet__cheek pet__cheek--right" aria-hidden="true"></span>
-        </button>
-        <figcaption class="pet__caption" id="pet-caption" aria-live="polite">Tap the screen to poke Mochi</figcaption>
-      </figure>
-
-      <div class="hero__copy">
-        <h1>Install Mochi on your <span class="nowrap">ESP32-C3</span> Super&nbsp;Mini</h1>
-        <p class="lead">
-          Plug the board in over USB and install the firmware from this tab.
-          No Arduino IDE needed.
-        </p>
-
-        <div class="installer">
-          <dl class="specs">
-            <div class="specs__item">
-              <dt>Board</dt>
-              <dd>ESP32-C3 Super Mini</dd>
-            </div>
-            <div class="specs__item">
-              <dt>Firmware</dt>
-              <dd>Mochi <span data-version>1.0.0</span></dd>
-            </div>
-            <div class="specs__item">
-              <dt>Cable</dt>
-              <dd>USB-C with data</dd>
-            </div>
-          </dl>
-
-          <!-- The real ESP Web Tools component. The slotted button opens its installer. -->
-          <esp-web-install-button manifest="manifest.json">
-            <button class="install-button" slot="activate" type="button">
-              Install Mochi
-            </button>
-
-            <p class="notice notice--error" slot="unsupported">
-              This browser can't talk to USB devices. Open this page in
-              desktop Chrome or Edge to install Mochi.
-            </p>
-
-            <p class="notice notice--error" slot="not-allowed">
-              The installer only runs on a secure page. Open this page
-              over HTTPS (GitHub Pages does this for you).
-            </p>
-          </esp-web-install-button>
-
-          <p class="installer__hint">Works in desktop Chrome and Edge.</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-
-  <!-- How to install -->
-  <section class="section" aria-labelledby="steps-title">
-    <div class="container">
-
-      <div class="section__head">
-        <h2 id="steps-title">How to install</h2>
-
-        <!-- Replace this URL with your actual tutorial. -->
-        <a class="pill-link" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6.5 4.8v10.4a.8.8 0 0 0 1.2.7l8.3-5.2a.8.8 0 0 0 0-1.4L7.7 4.1a.8.8 0 0 0-1.2.7Z" fill="currentColor"/></svg>
-          Watch the video tutorial
-        </a>
-      </div>
-
-      <ol class="steps">
-        <li class="step">
-          <h3>Plug in the board</h3>
-          <p>
-            Connect the Super Mini to your computer with a USB-C cable
-            that carries data. Charge-only cables won't show up.
-          </p>
-        </li>
-
-        <li class="step">
-          <h3>Click Install Mochi</h3>
-          <p>
-            Your browser lists the serial ports it can see. Pick the one
-            named <em>USB JTAG/serial debug unit</em> and connect.
-          </p>
-        </li>
-
-        <li class="step">
-          <h3>Wait for it to finish</h3>
-          <p>
-            The installer erases the board and writes Mochi. Keep the
-            cable plugged in until it says installation is complete.
-          </p>
-        </li>
-
-        <li class="step">
-          <h3>Say hello</h3>
-          <p>
-            Mochi restarts and its face appears. Once it's on your Wi-Fi,
-            open <a href="http://mochi.local/">mochi.local</a> to change
-            faces, sounds and the clock.
-          </p>
-        </li>
-      </ol>
-
-      <aside class="note">
-        <svg class="note__icon" viewBox="0 0 20 20" aria-hidden="true">
-          <circle cx="10" cy="10" r="9" fill="currentColor" opacity=".18"/>
-          <rect x="9" y="5" width="2" height="7" rx="1" fill="currentColor"/>
-          <circle cx="10" cy="14.6" r="1.2" fill="currentColor"/>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="#top" aria-label="Mochi home">
+        <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="29" height="29" rx="9" fill="#E8452C" stroke="#1B2163" stroke-width="3"/>
+          <rect x="8" y="10" width="6" height="10" rx="3" fill="#FFF6E5"/>
+          <rect x="18" y="10" width="6" height="10" rx="3" fill="#FFF6E5"/>
         </svg>
-        <p>
-          Installing can erase what's saved on the board, like its Wi-Fi
-          details. If the cable comes loose midway, the board may not start;
-          run the installer again to fix it.
-        </p>
-      </aside>
-
+        <span>Mochi</span>
+      </a>
+      <p class="byline">Firmware by Satya</p>
     </div>
-  </section>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero__grid">
+
+        <div class="hero__copy">
+          <h1>Install Mochi on your <span class="nowrap">ESP32-C3</span> Super&nbsp;Mini</h1>
+          <p class="lead">
+            Plug the board in over USB and install the firmware from this tab.
+            No Arduino IDE needed.
+          </p>
+
+          <div class="ticket">
+            <dl class="specs">
+              <div class="specs__item">
+                <dt>Board</dt>
+                <dd>ESP32-C3 Super Mini</dd>
+              </div>
+              <div class="specs__item">
+                <dt>Firmware</dt>
+                <dd>Mochi <span data-version>1.0.0</span></dd>
+              </div>
+              <div class="specs__item">
+                <dt>Cable</dt>
+                <dd>USB-C with data</dd>
+              </div>
+            </dl>
+
+            <!-- The real ESP Web Tools component. The slotted button opens its installer. -->
+            <esp-web-install-button manifest="manifest.json">
+              <button class="install-button" slot="activate" type="button">
+                Install Mochi
+              </button>
+
+              <p class="notice" slot="unsupported">
+                This browser can't talk to USB devices. Open this page in
+                desktop Chrome or Edge to install Mochi.
+              </p>
+
+              <p class="notice" slot="not-allowed">
+                The installer only runs on a secure page. Open this page
+                over HTTPS (GitHub Pages does this for you).
+              </p>
+            </esp-web-install-button>
+
+            <p class="ticket__hint">Works in desktop Chrome and Edge.</p>
+          </div>
+        </div>
+
+        <div class="shrine">
+          <svg class="branch" id="branch" viewBox="0 0 440 210" aria-hidden="true">
+            <g fill="none" stroke="#1B2163" stroke-linecap="round">
+              <path d="M-10 40 C80 34 150 60 230 92 C290 116 340 120 400 112" stroke-width="18"/>
+              <path d="M150 62 C180 30 210 18 252 14" stroke-width="12"/>
+              <path d="M262 106 C280 140 300 160 336 172" stroke-width="10"/>
+            </g>
+            <g fill="none" stroke="#6B3E2E" stroke-linecap="round">
+              <path d="M-10 40 C80 34 150 60 230 92 C290 116 340 120 400 112" stroke-width="11"/>
+              <path d="M150 62 C180 30 210 18 252 14" stroke-width="6"/>
+              <path d="M262 106 C280 140 300 160 336 172" stroke-width="4.5"/>
+            </g>
+            <use href="#blossom" x="18" y="12" width="46" height="46"/>
+            <use href="#blossom" x="74" y="44" width="40" height="40"/>
+            <use href="#blossom" x="120" y="22" width="44" height="44"/>
+            <use href="#blossom" x="176" y="-4" width="40" height="40"/>
+            <use href="#blossom" x="232" y="-6" width="38" height="38"/>
+            <use href="#blossom" x="196" y="78" width="46" height="46"/>
+            <use href="#blossom" x="258" y="80" width="38" height="38"/>
+            <use href="#blossom" x="296" y="138" width="42" height="42"/>
+            <use href="#blossom" x="342" y="92" width="44" height="44"/>
+            <use href="#blossom" x="392" y="96" width="34" height="34"/>
+            <circle cx="112" cy="94" r="6" fill="#FF7FA6" stroke="#1B2163" stroke-width="2.5"/>
+            <circle cx="282" cy="62" r="5" fill="#FF7FA6" stroke="#1B2163" stroke-width="2.5"/>
+            <circle cx="350" cy="188" r="5" fill="#FF7FA6" stroke="#1B2163" stroke-width="2.5"/>
+          </svg>
+
+          <svg class="shrine__art" viewBox="0 0 500 460" aria-hidden="true">
+            <!-- sun -->
+            <circle cx="250" cy="236" r="164" fill="#FFE27A"/>
+            <circle cx="250" cy="236" r="138" fill="#FFC233"/>
+
+            <g stroke="#1B2163" stroke-width="4" stroke-linejoin="round">
+              <!-- pillars -->
+              <path d="M100 66 H130 L134 422 H96 Z" fill="#E8452C"/>
+              <path d="M370 66 H400 L404 422 H366 Z" fill="#E8452C"/>
+              <path d="M106 84 V400" stroke="#FF7A55" stroke-width="5" stroke-linecap="round"/>
+              <path d="M376 84 V400" stroke="#FF7A55" stroke-width="5" stroke-linecap="round"/>
+              <!-- pillar feet -->
+              <rect x="88" y="404" width="54" height="40" rx="4" fill="#1B2163"/>
+              <rect x="358" y="404" width="54" height="40" rx="4" fill="#1B2163"/>
+              <!-- lower beam -->
+              <rect x="50" y="140" width="400" height="22" rx="3" fill="#E8452C"/>
+              <!-- name plaque -->
+              <rect x="216" y="74" width="68" height="76" rx="4" fill="#1B2163"/>
+              <rect x="224" y="84" width="52" height="58" rx="2" fill="#FFF6E5" stroke="none"/>
+              <!-- upper beams -->
+              <path d="M30 48 Q250 82 470 48 L470 66 Q250 100 30 66 Z" fill="#E8452C"/>
+              <path d="M4 18 Q250 60 496 18 L488 46 Q250 82 12 46 Z" fill="#1B2163"/>
+            </g>
+            <text class="shrine__plaque" x="250" y="110">も</text>
+            <text class="shrine__plaque" x="250" y="136">ち</text>
+
+            <!-- offering stand -->
+            <g stroke="#1B2163" stroke-width="4" stroke-linejoin="round">
+              <path d="M204 388 H296 L304 444 H196 Z" fill="#F3D3A0"/>
+              <path d="M238 444 V426 Q250 404 262 426 V444" fill="#C9884A"/>
+              <rect x="176" y="368" width="148" height="22" rx="3" fill="#F7DFB4"/>
+            </g>
+          </svg>
+
+          <button class="pet" id="pet" type="button" aria-label="Poke Mochi to change its face">
+            <span class="pet__cheek pet__cheek--left" aria-hidden="true"></span>
+            <span class="pet__screen">
+              <canvas id="oled" width="128" height="64" aria-hidden="true"></canvas>
+            </span>
+            <span class="pet__cheek pet__cheek--right" aria-hidden="true"></span>
+          </button>
+
+          <p class="say" id="pet-caption" aria-live="polite">Tap me</p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
 
 
-  <!-- Troubleshooting -->
-  <section class="section" aria-labelledby="help-title">
-    <div class="container help">
+<!-- ============ STEPS: ema plaques ============ -->
+<section class="path" aria-labelledby="steps-title">
+  <div class="container">
 
-      <div class="help__intro">
+    <div class="path__head">
+      <h2 id="steps-title">How to install</h2>
+
+      <!-- Replace this URL with your actual tutorial. -->
+      <a class="pill-link" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6.5 4.8v10.4a.8.8 0 0 0 1.2.7l8.3-5.2a.8.8 0 0 0 0-1.4L7.7 4.1a.8.8 0 0 0-1.2.7Z" fill="currentColor"/></svg>
+        Watch the video tutorial
+      </a>
+    </div>
+
+    <ol class="steps">
+      <li class="ema">
+        <div class="ema__board">
+          <div class="ema__wood">
+            <span class="ema__num" aria-hidden="true">一</span>
+            <h3>Plug in the board</h3>
+            <p>
+              Connect the Super Mini to your computer with a USB-C cable
+              that carries data. Charge-only cables won't show up.
+            </p>
+          </div>
+        </div>
+      </li>
+
+      <li class="ema">
+        <div class="ema__board">
+          <div class="ema__wood">
+            <span class="ema__num" aria-hidden="true">二</span>
+            <h3>Click Install Mochi</h3>
+            <p>
+              Your browser lists the serial ports it can see. Pick the one
+              named <em>USB JTAG/serial debug unit</em> and connect.
+            </p>
+          </div>
+        </div>
+      </li>
+
+      <li class="ema">
+        <div class="ema__board">
+          <div class="ema__wood">
+            <span class="ema__num" aria-hidden="true">三</span>
+            <h3>Wait for it to finish</h3>
+            <p>
+              The installer erases the board and writes Mochi. Keep the
+              cable plugged in until it says installation is complete.
+            </p>
+          </div>
+        </div>
+      </li>
+
+      <li class="ema">
+        <div class="ema__board">
+          <div class="ema__wood">
+            <span class="ema__num" aria-hidden="true">四</span>
+            <h3>Say hello</h3>
+            <p>
+              Mochi restarts and its face appears. Once it's on your Wi-Fi,
+              open <a href="http://mochi.local/">mochi.local</a> to change
+              faces, sounds and the clock.
+            </p>
+          </div>
+        </div>
+      </li>
+    </ol>
+
+    <aside class="slip">
+      <span class="slip__mark" aria-hidden="true">!</span>
+      <p>
+        Installing can erase what's saved on the board, like its Wi-Fi
+        details. If the cable comes loose midway, the board may not start;
+        run the installer again to fix it.
+      </p>
+    </aside>
+
+  </div>
+</section>
+
+
+<!-- ============ TROUBLESHOOTING: the mecha bay ============ -->
+<section class="bay" aria-labelledby="help-title">
+  <div class="container bay__grid">
+
+    <div class="bay__intro">
+      <div class="bubble">
         <h2 id="help-title">If something goes wrong</h2>
         <p>
-          Most problems come down to the cable or another app holding
-          the port. Start there.
+          Most problems come down to the cable or another app holding the
+          port. Start there.
         </p>
       </div>
 
-      <div class="help__list">
-        <div class="faq">
-          <details>
-            <summary>The board isn't in the port list</summary>
-            <p>
-              Try a different cable or USB port. If it still doesn't appear,
-              put the board into download mode: hold <kbd>BOOT</kbd>, press
-              and release <kbd>RST</kbd>, then let go of <kbd>BOOT</kbd>.
-              Click Install Mochi again.
-            </p>
-          </details>
+      <svg class="mecha" viewBox="0 0 240 310" aria-hidden="true">
+        <ellipse class="mecha__shadow" cx="120" cy="298" rx="56" ry="8" fill="#1B2163" opacity=".22"/>
 
-          <details>
-            <summary>Installing stops partway</summary>
-            <p>
-              Close the Arduino Serial Monitor and any other app using the
-              port, put the board into download mode, and try again.
-            </p>
-          </details>
+        <g class="mecha__body">
+          <!-- thrusters -->
+          <g class="mecha__flame" style="transform-origin: 95px 268px">
+            <path d="M84 268 Q95 300 106 268 Z" fill="#FFC233" stroke="#E8452C" stroke-width="3" stroke-linejoin="round"/>
+          </g>
+          <g class="mecha__flame" style="transform-origin: 145px 268px; animation-delay: -.07s">
+            <path d="M134 268 Q145 300 156 268 Z" fill="#FFC233" stroke="#E8452C" stroke-width="3" stroke-linejoin="round"/>
+          </g>
 
-          <details>
-            <summary>No face on the screen after installing</summary>
-            <p>
-              Mochi looks for the screen at I²C address 0x3C or 0x3D. Check
-              the SDA and SCL wires. If you used different pins, set them in
-              the controller at mochi.local.
-            </p>
-          </details>
+          <g stroke="#1B2163" stroke-width="3.5" stroke-linejoin="round">
+            <!-- legs -->
+            <rect x="80" y="204" width="32" height="52" rx="9" fill="#F5F6FF"/>
+            <rect x="128" y="204" width="32" height="52" rx="9" fill="#F5F6FF"/>
+            <rect x="84" y="222" width="24" height="14" rx="4" fill="#2A3290"/>
+            <rect x="132" y="222" width="24" height="14" rx="4" fill="#2A3290"/>
+            <path d="M74 252 H116 L120 270 H70 Z" fill="#2A3290"/>
+            <path d="M124 252 H166 L170 270 H120 Z" fill="#2A3290"/>
 
-          <details>
-            <summary>The installer says the chip isn't supported</summary>
-            <p>
-              This build is for ESP32-C3 boards only. An ESP32-S3 needs its
-              own S3 build of the firmware.
-            </p>
-          </details>
-        </div>
+            <!-- waist -->
+            <rect x="80" y="188" width="80" height="20" rx="5" fill="#2A3290"/>
+            <path d="M106 194 H134 L130 222 H110 Z" fill="#E8452C"/>
 
-        <h3 class="faq-group">If you host this installer</h3>
+            <!-- torso -->
+            <path d="M72 128 Q72 118 82 118 H158 Q168 118 168 128 L160 192 H80 Z" fill="#F5F6FF"/>
+            <path d="M88 118 H152 L144 134 H96 Z" fill="#2A3290"/>
+            <circle cx="120" cy="158" r="15" fill="#E8452C"/>
+            <circle cx="115" cy="153" r="5" fill="#FFC233" stroke="none"/>
+            <path d="M86 146 H98 M86 156 H98 M142 146 H154 M142 156 H154" stroke="#FFC233" stroke-width="4" stroke-linecap="round"/>
 
-        <div class="faq">
-          <details>
-            <summary>GitHub Pages shows a 404</summary>
-            <p>
-              Check that index.html sits in the folder Pages publishes from,
-              and that Pages is turned on for the repository.
-            </p>
-          </details>
+            <!-- arm holding the wrench -->
+            <rect x="172" y="146" width="24" height="54" rx="11" fill="#F5F6FF"/>
+            <rect x="172" y="166" width="24" height="12" rx="3" fill="#2A3290"/>
+            <g transform="translate(184 210) rotate(-28)">
+              <rect x="-5" y="0" width="10" height="62" rx="4" fill="#C9CFEA"/>
+              <path d="M-14 58 Q-16 82 0 84 Q16 82 14 58 L6 64 V74 H-6 V64 Z" fill="#C9CFEA"/>
+            </g>
+            <circle cx="184" cy="208" r="13" fill="#F5F6FF"/>
+            <path d="M158 116 Q158 108 168 108 H196 Q206 108 206 118 V146 Q206 156 196 156 H168 Q158 156 158 146 Z" fill="#2A3290"/>
+            <path d="M166 124 H198" stroke="#F5F6FF" stroke-width="5" stroke-linecap="round"/>
 
-          <details>
-            <summary>The firmware files won't download</summary>
-            <p>
-              Open manifest.json in the browser and check that every firmware
-              path in it matches a file in the repository.
-            </p>
-          </details>
+            <!-- left pauldron, under the waving arm -->
+            <path d="M34 118 Q34 108 44 108 H72 Q82 108 82 116 V146 Q82 156 72 156 H44 Q34 156 34 146 Z" fill="#2A3290"/>
+            <path d="M42 124 H74" stroke="#F5F6FF" stroke-width="5" stroke-linecap="round"/>
 
-          <details>
-            <summary>An old version still installs</summary>
-            <p>
-              Hard refresh the page, then confirm the published manifest.json
-              and .bin files are the latest ones.
-            </p>
-          </details>
-        </div>
+            <!-- head -->
+            <path d="M70 58 L36 8 L50 4 L84 48 Z" fill="#FFC233"/>
+            <path d="M170 58 L204 8 L190 4 L156 48 Z" fill="#FFC233"/>
+            <rect x="58" y="30" width="124" height="92" rx="30" fill="#F5F6FF"/>
+            <path d="M88 30 H152 Q148 46 120 48 Q92 46 88 30 Z" fill="#2A3290"/>
+            <circle cx="120" cy="38" r="6" fill="#E8452C"/>
+            <rect x="72" y="60" width="96" height="40" rx="17" fill="#12164A"/>
+            <rect x="60" y="88" width="10" height="20" rx="3" fill="#E8452C"/>
+            <rect x="170" y="88" width="10" height="20" rx="3" fill="#E8452C"/>
+            <rect x="102" y="104" width="36" height="12" rx="4" fill="#2A3290"/>
+          </g>
+          <g class="mecha__eyes" fill="#FFC233">
+            <rect x="89" y="68" width="18" height="24" rx="7"/>
+            <rect x="133" y="68" width="18" height="24" rx="7"/>
+          </g>
+          <path d="M110 108 V112 M120 108 V112 M130 108 V112" stroke="#F5F6FF" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- waving arm -->
+          <g class="mecha__wave">
+            <g stroke="#1B2163" stroke-width="3.5" stroke-linejoin="round">
+              <rect x="46" y="84" width="24" height="62" rx="11" fill="#F5F6FF"/>
+              <rect x="46" y="100" width="24" height="12" rx="3" fill="#2A3290"/>
+              <path d="M44 84 V60 Q44 54 49 54 Q54 54 54 60 V54 Q54 48 59 48 Q64 48 64 54 V58 Q64 52 69 52 Q74 52 74 58 V84 Q74 92 58 92 Q44 92 44 84 Z" fill="#F5F6FF"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="bay__list">
+      <div class="faq">
+        <details>
+          <summary>The board isn't in the port list</summary>
+          <p>
+            Try a different cable or USB port. If it still doesn't appear,
+            put the board into download mode: hold <kbd>BOOT</kbd>, press
+            and release <kbd>RST</kbd>, then let go of <kbd>BOOT</kbd>.
+            Click Install Mochi again.
+          </p>
+        </details>
+
+        <details>
+          <summary>Installing stops partway</summary>
+          <p>
+            Close the Arduino Serial Monitor and any other app using the
+            port, put the board into download mode, and try again.
+          </p>
+        </details>
+
+        <details>
+          <summary>No face on the screen after installing</summary>
+          <p>
+            Mochi looks for the screen at I²C address 0x3C or 0x3D. Check
+            the SDA and SCL wires. If you used different pins, set them in
+            the controller at mochi.local.
+          </p>
+        </details>
+
+        <details>
+          <summary>The installer says the chip isn't supported</summary>
+          <p>
+            This build is for ESP32-C3 boards only. An ESP32-S3 needs its
+            own S3 build of the firmware.
+          </p>
+        </details>
       </div>
 
+      <h3 class="faq-group">If you host this installer</h3>
+
+      <div class="faq">
+        <details>
+          <summary>GitHub Pages shows a 404</summary>
+          <p>
+            Check that index.html sits in the folder Pages publishes from,
+            and that Pages is turned on for the repository.
+          </p>
+        </details>
+
+        <details>
+          <summary>The firmware files won't download</summary>
+          <p>
+            Open manifest.json in the browser and check that every firmware
+            path in it matches a file in the repository.
+          </p>
+        </details>
+
+        <details>
+          <summary>An old version still installs</summary>
+          <p>
+            Hard refresh the page, then confirm the published manifest.json
+            and .bin files are the latest ones.
+          </p>
+        </details>
+      </div>
     </div>
-  </section>
 
-</main>
+  </div>
+</section>
 
 
-<footer class="site-footer">
-  <div class="container site-footer__inner">
-    <p>Mochi firmware by Satya</p>
-    <p>
-      Installer powered by
-      <a href="https://esphome.github.io/esp-web-tools/" target="_blank" rel="noopener noreferrer">ESP Web Tools</a>
-    </p>
+<!-- ============ FOOTER: the ramen stall ============ -->
+<footer class="stall">
+  <div class="noren" aria-hidden="true">
+    <span>ら</span><span>ー</span><span>め</span><span>ん</span>
+  </div>
+
+  <div class="container stall__inner">
+    <svg class="ramen" viewBox="0 0 300 250" aria-hidden="true">
+      <g class="ramen__steam" fill="none" stroke="#FFF6E5" stroke-width="6" stroke-linecap="round">
+        <path d="M108 92 C94 74 122 62 108 44 C98 30 114 20 108 6"/>
+        <path d="M150 86 C136 68 164 56 150 38 C140 24 156 14 150 0"/>
+        <path d="M192 92 C178 74 206 62 192 44 C182 30 198 20 192 6"/>
+      </g>
+
+      <g stroke="#1B2163" stroke-width="3.5" stroke-linejoin="round">
+        <!-- bowl -->
+        <path d="M28 140 H272 C264 202 214 228 150 228 C86 228 36 202 28 140 Z" fill="#E8452C"/>
+        <path d="M44 172 C80 188 220 188 256 172" fill="none" stroke="#FFF6E5" stroke-width="10"/>
+        <rect x="112" y="224" width="76" height="14" rx="5" fill="#C9331A"/>
+        <ellipse cx="150" cy="140" rx="122" ry="24" fill="#FFF6E5"/>
+
+        <!-- nori -->
+        <path d="M70 92 L114 82 L122 140 L78 150 Z" fill="#1F3B2D"/>
+
+        <!-- broth -->
+        <ellipse cx="150" cy="141" rx="108" ry="17" fill="#F7B548"/>
+      </g>
+      <g fill="none" stroke="#FFE59A" stroke-width="4" stroke-linecap="round">
+        <path d="M66 142 q8 -6 16 0 t16 0 t16 0"/>
+        <path d="M186 146 q8 -6 16 0 t16 0 t16 0"/>
+        <path d="M120 152 q8 -5 16 0 t16 0"/>
+      </g>
+
+      <g stroke="#1B2163" stroke-width="3" stroke-linejoin="round">
+        <!-- toppings -->
+        <ellipse cx="208" cy="134" rx="18" ry="10" fill="#E9A07A"/>
+        <ellipse cx="208" cy="134" rx="10" ry="5" fill="#F6C6A6" stroke="none"/>
+        <ellipse cx="104" cy="138" rx="17" ry="10" fill="#FFFFFF"/>
+        <path d="M104 138 c0 -3 5 -3 5 0 c0 5 -10 5 -10 0 c0 -7 15 -7 15 0" fill="none" stroke="#FF6F9A" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="152" cy="132" rx="18" ry="11" fill="#FFFFFF"/>
+        <ellipse cx="152" cy="132" rx="9" ry="6" fill="#F59A1F"/>
+      </g>
+      <g fill="none" stroke="#3FB37F" stroke-width="2.5">
+        <circle cx="178" cy="146" r="3.5"/>
+        <circle cx="130" cy="146" r="3"/>
+        <circle cx="236" cy="142" r="3"/>
+      </g>
+
+      <!-- chopsticks lifting noodles -->
+      <g class="ramen__lift">
+        <g fill="none" stroke="#FFE59A" stroke-width="4" stroke-linecap="round">
+          <path d="M168 104 q-6 10 0 20 t0 20"/>
+          <path d="M176 106 q6 10 0 20 t0 20"/>
+          <path d="M184 104 q-6 10 0 18 t0 18"/>
+        </g>
+        <g stroke="#1B2163" stroke-width="3" stroke-linejoin="round">
+          <path d="M262 14 L270 20 L178 110 L172 106 Z" fill="#F3C27A"/>
+          <path d="M282 30 L288 38 L186 112 L182 106 Z" fill="#F3C27A"/>
+        </g>
+      </g>
+    </svg>
+
+    <div class="stall__text">
+      <p class="stall__credit">Mochi firmware by Satya</p>
+      <p>
+        Installer powered by
+        <a href="https://esphome.github.io/esp-web-tools/" target="_blank" rel="noopener noreferrer">ESP Web Tools</a>
+      </p>
+    </div>
   </div>
 </footer>
 
