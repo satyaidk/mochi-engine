@@ -204,6 +204,12 @@
     }
   }
 
+  function restartAnimation(el, className) {
+    el.classList.remove(className);
+    void el.offsetWidth;
+    el.classList.add(className);
+  }
+
   function poke() {
     reaction = REACTIONS[reactionCount % REACTIONS.length];
     reactionCount += 1;
@@ -211,9 +217,9 @@
     caption.textContent = reaction;
 
     if (!reduceMotion.matches) {
-      pet.classList.remove('is-squished');
-      void pet.offsetWidth; // restart the animation
-      pet.classList.add('is-squished');
+      restartAnimation(pet, 'is-squished');
+      restartAnimation(caption, 'is-pop');
+      burstPetals(pet);
     }
     schedule();
   }
@@ -221,6 +227,9 @@
   pet.addEventListener('click', poke);
   pet.addEventListener('animationend', function () {
     pet.classList.remove('is-squished');
+  });
+  caption.addEventListener('animationend', function () {
+    caption.classList.remove('is-pop');
   });
 
   // Mochi perks up and looks over when you head for the install button.
@@ -243,4 +252,149 @@
 
   document.addEventListener('visibilitychange', schedule);
   schedule();
+
+
+  // ---- Cherry blossom petals ----
+  // A few drift off the branch while the shrine is on screen;
+  // poking Mochi throws a handful into the air.
+
+  var petalCanvas = document.createElement('canvas');
+  petalCanvas.className = 'petals';
+  petalCanvas.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(petalCanvas);
+
+  var pctx = petalCanvas.getContext('2d');
+  var PETAL_COLORS = ['#FF9EBB', '#FFB8CC', '#FFD3E0', '#FF85A8'];
+  var branch = document.getElementById('branch');
+  var petals = [];
+  var petalRaf = 0;
+  var petalLast = 0;
+  var dpr = 1;
+  var skyVisible = true;
+
+  function sizePetalCanvas() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    petalCanvas.width = Math.round(window.innerWidth * dpr);
+    petalCanvas.height = Math.round(window.innerHeight * dpr);
+  }
+
+  function addPetal(x, y, vx, vy, wind) {
+    petals.push({
+      x: x,
+      y: y,
+      vx: vx,
+      vy: vy,
+      wind: wind,
+      size: rand(11, 18),
+      rot: rand(0, Math.PI * 2),
+      spin: rand(-3, 3),
+      flip: rand(0, Math.PI * 2),
+      flipSpeed: rand(3, 7),
+      sway: rand(0, Math.PI * 2),
+      swayAmp: rand(18, 46),
+      fall: rand(45, 85),
+      color: PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)]
+    });
+    if (!petalRaf) {
+      petalLast = performance.now();
+      petalRaf = requestAnimationFrame(stepPetals);
+    }
+  }
+
+  function burstPetals(el) {
+    var r = el.getBoundingClientRect();
+    var cx = r.left + r.width / 2;
+    var cy = r.top + r.height * 0.35;
+    for (var i = 0; i < 42; i++) {
+      var angle = rand(-Math.PI * 0.95, -Math.PI * 0.05); // an upward fan
+      var speed = rand(220, 520);
+      addPetal(cx + rand(-20, 20), cy + rand(-10, 10),
+        Math.cos(angle) * speed, Math.sin(angle) * speed, rand(-10, 20));
+    }
+  }
+
+  function driftPetal() {
+    if (!branch) return;
+    var r = branch.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) return;
+    addPetal(rand(Math.max(r.left, 0), r.right), r.top + rand(r.height * 0.2, r.height * 0.7),
+      0, rand(20, 50), rand(15, 40));
+  }
+
+  function drawPetal(p) {
+    var s = p.size;
+    pctx.save();
+    pctx.translate(p.x * dpr, p.y * dpr);
+    pctx.rotate(p.rot);
+    pctx.scale(dpr * Math.cos(p.flip), dpr); // tumbling over as it falls
+    pctx.beginPath();
+    pctx.moveTo(0, s * 0.55);
+    pctx.bezierCurveTo(-s * 0.62, s * 0.2, -s * 0.52, -s * 0.5, -s * 0.14, -s * 0.5);
+    pctx.lineTo(0, -s * 0.3);
+    pctx.lineTo(s * 0.14, -s * 0.5);
+    pctx.bezierCurveTo(s * 0.52, -s * 0.5, s * 0.62, s * 0.2, 0, s * 0.55);
+    pctx.fillStyle = p.color;
+    pctx.fill();
+    pctx.restore();
+  }
+
+  function stepPetals(now) {
+    var dt = Math.min((now - petalLast) / 1000, 0.05);
+    petalLast = now;
+    pctx.clearRect(0, 0, petalCanvas.width, petalCanvas.height);
+
+    for (var i = petals.length - 1; i >= 0; i--) {
+      var p = petals[i];
+      // Thrown petals slow down, then settle into the same gentle fall.
+      p.vx *= Math.pow(0.25, dt);
+      if (p.vy < p.fall) {
+        p.vy = Math.min(p.fall, p.vy + 600 * dt);
+      } else {
+        p.vy += (p.fall - p.vy) * Math.min(1, dt * 3);
+      }
+      p.sway += dt * 2.2;
+      p.x += (p.vx + p.wind + Math.sin(p.sway) * p.swayAmp) * dt;
+      p.y += p.vy * dt;
+      p.rot += p.spin * dt;
+      p.flip += p.flipSpeed * dt;
+
+      if (p.y > window.innerHeight + 30 || p.x < -40 || p.x > window.innerWidth + 40) {
+        petals.splice(i, 1);
+        continue;
+      }
+      drawPetal(p);
+    }
+
+    petalRaf = petals.length ? requestAnimationFrame(stepPetals) : 0;
+  }
+
+  sizePetalCanvas();
+  window.addEventListener('resize', sizePetalCanvas);
+
+  var sky = document.querySelector('.sky');
+  if (sky && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      skyVisible = entries[0].isIntersecting;
+    }).observe(sky);
+  }
+
+  setInterval(function () {
+    if (skyVisible && !document.hidden && !reduceMotion.matches && petals.length < 40) {
+      driftPetal();
+    }
+  }, 900);
+
+
+  // ---- Pause the mecha and ramen loops while they're off screen ----
+
+  if ('IntersectionObserver' in window) {
+    var pauser = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        entry.target.classList.toggle('is-paused', !entry.isIntersecting);
+      });
+    });
+    document.querySelectorAll('.bay, .stall').forEach(function (el) {
+      pauser.observe(el);
+    });
+  }
 })();
